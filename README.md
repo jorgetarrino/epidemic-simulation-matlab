@@ -6,7 +6,7 @@ Stochastic agent-based model of an epidemic spreading through a population of **
 
 - Each person is **healthy**, **infected** or **dead**.
 - Every simulated day, each person visits 5 random locations. A healthy person who shares a location with an infected person catches the disease with probability 0.25.
-- The illness lasts a random number of days (up to 14). When it ends, the person either dies or recovers with antibodies.
+- The illness lasts a random number of days (up to 14). When it ends, the person either dies or recovers with antibodies, which cut the risk of reinfection to 10%.
 - **Public-health measures** switch on automatically when infections cross a threshold:
   - mandatory masks (infection risk × 0.38)
   - mandatory vaccination (infection risk × 0.05)
@@ -18,10 +18,8 @@ Open `epidemic_simulation.m` in MATLAB and run it. All parameters (population si
 
 ## Known limitations
 
-- The list of locations with infected people is not updated correctly in every case (the `ismember` check on line 94).
-- The thresholds use the sum of daily infected counts, not the number of cumulative cases.
-- Antibodies currently have no effect (`antiC = 1`).
 - The nested loops are slow for 250,000 agents and could be vectorised.
+- "Home" (where nobody gets infected) is only one of the 400 locations, so people rarely stay home.
 
 ## Author
 

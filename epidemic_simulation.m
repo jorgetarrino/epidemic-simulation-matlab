@@ -37,7 +37,7 @@ p = 0.25;
 %Probabilidad de muerte
 deadp = 0.6;
 %Efectividad de anticuerpos
-antiC = 1;
+antiC = 0.1;
 
 %Dias transcurridos en la simulacion
 dia = 0;
@@ -59,6 +59,8 @@ historialSane = zeros(1, diaMax);
 historialInf = zeros(1, diaMax);
 %Historial de muertos
 historialDead = zeros(1, diaMax);
+%Casos totales acumulados (cada persona cuenta una vez por contagio)
+casosTotales = 1;
 
 while sum(estado(:) == 1) ~= 0 && dia < diaMax
     dia = dia + 1;
@@ -69,14 +71,14 @@ while sum(estado(:) == 1) ~= 0 && dia < diaMax
     fprintf('Sanos: %i\n', historialSane(dia))
     fprintf('Infectados: %i\n', historialInf(dia))
     fprintf('Muertos: %i\n', historialDead(dia))
-    if (sum(historialInf))/(hab^2) >= minMasc && mascIsOn == false
+    if casosTotales/(hab^2) >= minMasc && mascIsOn == false
         %Asumimos que todo el mundo usa mascarilla
         mascarilla = ones(hab);
         dayMasc = dia;
         mascIsOn = true;
     end
-    if (sum(historialInf))/(hab^2) >= minVac && vacIsOn == false
-        %Asumimos que todo el mundo usa mascarilla
+    if casosTotales/(hab^2) >= minVac && vacIsOn == false
+        %Asumimos que todo el mundo se vacuna
         vacuna = ones(hab);
         dayVac = dia;
         vacIsOn = true;
@@ -91,9 +93,7 @@ while sum(estado(:) == 1) ~= 0 && dia < diaMax
         %disp('Lugares:');
         %disp(lugar);
         %Actualizamos el array de lugares en el que hay personas infectadas
-        if ~ismember(lugar((estado == 1)), (lugInf))
-            lugInf = lugar((estado == 1));
-        end
+        lugInf = unique(lugar(estado == 1));
         %Si coinciden, ¿se contagian o no? ¿Cuanto tiempo?
         for i = 1:hab
             for j = 1:hab
@@ -124,6 +124,7 @@ while sum(estado(:) == 1) ~= 0 && dia < diaMax
 
                     if rand < pTotal
                         estado(i, j) = 1;
+                        casosTotales = casosTotales + 1;
                         duracion(i, j) = randi(maxDur);
                         %duracion(i, j) = maxDur;
                         %fprintf('El habitante %i,%i ha coincidido con un infectado. SI se ha infectado. Estará %i dias enfermo.\n', i, j, duracion(i,j))
