@@ -21,6 +21,6 @@ Open `epidemic_simulation.m` in MATLAB and run it. All parameters (population si
 - The nested loops are slow for 250,000 agents and could be vectorised.
 - "Home" (where nobody gets infected) is only one of the 400 locations, so people rarely stay home.
 
-## Author
+## Authors
 
-Jorge Tarriño, Universidad Carlos III de Madrid.
+Jorge Tarriño and Ana, Universidad Carlos III de Madrid.
